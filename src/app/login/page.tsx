@@ -1,13 +1,5 @@
 "use client";
-import {
-  Box,
-  Button,
-  Container,
-  Grid,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Container, Grid, Stack, Typography } from "@mui/material";
 import Image from "next/image";
 import assets from "@/assets";
 import Link from "next/link";
@@ -17,16 +9,16 @@ import { storeUserInfo } from "@/services/auth.services";
 import { toast } from "sonner";
 import { Router } from "next/router";
 import { useRouter } from "next/navigation";
-import { z } from "zod";
-import { useState } from "react";
 import PHForm from "@/components/Forms/PHForm";
-import { zodResolver } from "@hookform/resolvers/zod";
 import PHInput from "@/components/Forms/PHInput";
-export const validationScheme = z.object({
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
+
+export const validationSchema = z.object({
   email: z.string().email("Please enter a valid email address!"),
-  password: z.string().min(6, " Must be at least 6 characters"),
+  password: z.string().min(6, "Must be at least 6 characters"),
 });
-const defaultValues = { email: "", password: "" };
 
 const LoginPage = () => {
   const router = useRouter();
@@ -39,7 +31,10 @@ const LoginPage = () => {
       if (res?.data?.accessToken) {
         toast.success(res?.message);
         storeUserInfo({ accessToken: res?.data?.accessToken });
-        router.push("/");
+        router.push("/dashboard");
+      } else {
+        setError(res.message);
+        // console.log(res);
       }
     } catch (err: any) {
       console.error(err.message);
@@ -96,11 +91,15 @@ const LoginPage = () => {
               </Typography>
             </Box>
           )}
+
           <Box>
             <PHForm
               onSubmit={handleLogin}
-              resolver={zodResolver(validationScheme)}
-              defaultValues={defaultValues}
+              resolver={zodResolver(validationSchema)}
+              defaultValues={{
+                email: "",
+                password: "",
+              }}
             >
               <Grid container spacing={2} my={1}>
                 <Grid item md={6}>

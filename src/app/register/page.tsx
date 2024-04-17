@@ -18,10 +18,11 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { userLogin } from "@/services/actions/userLogin";
 import { storeUserInfo } from "@/services/auth.services";
-import { z } from "zod";
 import PHForm from "@/components/Forms/PHForm";
-import { zodResolver } from "@hookform/resolvers/zod";
 import PHInput from "@/components/Forms/PHInput";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
 export const patientValidationSchema = z.object({
   name: z.string().min(1, "Please enter your name!"),
   email: z.string().email("Please enter a valid email address!"),
@@ -63,7 +64,7 @@ const RegisterPage = () => {
         });
         if (result?.data?.accessToken) {
           storeUserInfo({ accessToken: result?.data?.accessToken });
-          router.push("/");
+          router.push("/dashboard");
         }
       }
     } catch (err: any) {
@@ -114,11 +115,14 @@ const RegisterPage = () => {
             >
               <Grid container spacing={2} my={1}>
                 <Grid item md={12}>
+                  <PHInput label="Name" fullWidth={true} name="patient.name" />
+                </Grid>
+                <Grid item md={6}>
                   <PHInput
-                    label="Name"
-                    size="small"
+                    label="Email"
+                    type="email"
                     fullWidth={true}
-                    name="patient.name"
+                    name="patient.email"
                   />
                 </Grid>
                 <Grid item md={6}>
@@ -142,14 +146,6 @@ const RegisterPage = () => {
                     label="Address"
                     fullWidth={true}
                     name="patient.address"
-                  />
-                </Grid>
-                <Grid item md={6}>
-                  <PHInput
-                    label="Email"
-                    type="email"
-                    fullWidth={true}
-                    name="patient.email"
                   />
                 </Grid>
               </Grid>

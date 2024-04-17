@@ -9,6 +9,7 @@ export const theme = createTheme({
       main: "#666f73",
     },
   },
+
   components: {
     MuiButton: {
       defaultProps: {
